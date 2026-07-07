@@ -1,17 +1,48 @@
-pipeline = get_pipeline()
+"""
+Test RAG Pipeline
+"""
 
-pipeline.clear()
+from pathlib import Path
 
-pipeline.build(
-    "docs/test.pdf"
-)
+from rag.manager import get_pipeline
 
-docs = pipeline.search(
-    "Transformer是什么？"
-)
 
-for doc in docs:
+PDF_PATH = Path("docs/test.pdf")
 
-    print(doc.metadata)
 
-    print(doc.page_content)
+def main():
+
+    pipeline = get_pipeline()
+
+    print("=" * 60)
+    print("Pipeline Test")
+    print("=" * 60)
+
+    pipeline.clear()
+
+    chunks = pipeline.build(PDF_PATH)
+
+    print(f"Chunks : {chunks}")
+
+    docs = pipeline.search(
+        "请输入一个你PDF里面存在的问题",
+        top_k=3,
+    )
+
+    print(f"\nRetrieved {len(docs)} documents.\n")
+
+    for i, doc in enumerate(docs, 1):
+
+        print("-" * 60)
+
+        print(f"Document {i}")
+
+        print(doc.metadata)
+
+        print(doc.page_content[:300])
+
+    print("\nPipeline test passed!")
+
+
+if __name__ == "__main__":
+    main()
