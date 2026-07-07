@@ -37,6 +37,16 @@ class VectorStore:
             "Vector database updated."
         )
 
+    def clear(self):
+    """
+    Delete all documents in vector database.
+    """
+        self.vector_db.reset_collection()
+
+    def is_empty(self) -> bool:
+        return self.count() == 0
+
+
     def as_retriever(
         self,
         k: int = 5,
