@@ -1,7 +1,24 @@
-llm = get_llm()
+"""
+Test DeepSeek LLM
+"""
 
-response = llm.invoke(
-    "你好，请介绍一下你自己。"
-)
+from llm.client import get_llm
 
-print(response.content)
+
+def main():
+
+    llm = get_llm()
+
+    print("=" * 60)
+    print("LLM Test")
+    print("=" * 60)
+
+    response = llm.invoke("请用一句话介绍Transformer。")
+
+    print(response.content)
+
+    print("\nLLM test passed!")
+
+
+if __name__ == "__main__":
+    main()
