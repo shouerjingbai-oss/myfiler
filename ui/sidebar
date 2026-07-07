@@ -6,7 +6,9 @@ import streamlit as st
 
 from config import APP_TITLE
 
-from rag.pipeline import RAGPipeline
+from rag.manager import get_pipeline
+
+pipeline = get_pipeline()
 
 
 def render_sidebar() -> None:
@@ -14,7 +16,7 @@ def render_sidebar() -> None:
     Render sidebar.
     """
 
-    pipeline = RAGPipeline()
+    pipeline = get_pipeline()
 
     with st.sidebar:
 
