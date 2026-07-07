@@ -3,10 +3,10 @@ Agent Tools
 """
 
 from langchain.tools import tool
+from langchain.tools import tool
 
-from rag.pipeline import RAGPipeline
+from rag.manager import get_pipeline
 
-pipeline = RAGPipeline()
 
 
 @tool
@@ -14,6 +14,8 @@ def search_knowledge(query: str) -> str:
     """
     Search relevant information from the knowledge base.
     """
+
+    pipeline = get_pipeline()
 
     docs = pipeline.search(query)
 
