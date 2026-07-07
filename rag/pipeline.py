@@ -1,17 +1,16 @@
 """
 RAG Pipeline
 
-Build knowledge base from PDF documents.
+End-to-end pipeline for building and managing the knowledge base.
 """
 
 from pathlib import Path
-from typing import List
 
 from langchain_core.documents import Document
 
 from rag.document_loader import PDFLoader
 from rag.text_splitter import DocumentSplitter
-from rag.vector_store import VectorStore
+from rag.knowledge_base import KnowledgeBase
 
 from utils.logger import logger
 
@@ -20,31 +19,33 @@ class RAGPipeline:
     """
     End-to-end RAG pipeline.
 
-    PDF
-        ↓
-    Load
-        ↓
-    Split
-        ↓
-    Embedding
-        ↓
-    ChromaDB
+    Workflow:
+        PDF
+          ↓
+      Document Loader
+          ↓
+      Text Splitter
+          ↓
+      Knowledge Base
+          ↓
+      Vector Database
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize all RAG components."""
 
         self.loader = PDFLoader()
-
         self.splitter = DocumentSplitter()
+        self.knowledge_base = KnowledgeBase()
 
-        self.vector_store = VectorStore()
-
-    def build(
-        self,
-        pdf_path: str | Path,
-    ) -> int:
+    def build(self, pdf_path: str | Path) -> int:
         """
-        Build vector database from a PDF.
+        Build a knowledge base from a PDF document.
+
+        Parameters
+        ----------
+        pdf_path : str | Path
+            Path to the PDF document.
 
         Returns
         -------
@@ -53,16 +54,20 @@ class RAGPipeline:
         """
 
         logger.info("=" * 60)
-        logger.info("Building Knowledge Base")
+        logger.info("Start building knowledge base...")
 
+        # 1. Load PDF
         documents = self.loader.load(pdf_path)
 
+        # 2. Split documents
         chunks = self.splitter.split(documents)
 
-        self.vector_store.add_documents(chunks)
+        # 3. Store into vector database
+        self.knowledge_base.add_documents(chunks)
 
         logger.success(
-            f"Knowledge Base Created ({len(chunks)} chunks)"
+            f"Knowledge base created successfully "
+            f"({len(chunks)} chunks)"
         )
 
         return len(chunks)
@@ -70,13 +75,75 @@ class RAGPipeline:
     def load_documents(
         self,
         pdf_path: str | Path,
-    ) -> List[Document]:
+    ) -> list[Document]:
+        """
+        Load PDF without splitting.
+
+        Parameters
+        ----------
+        pdf_path : str | Path
+
+        Returns
+        -------
+        list[Document]
+        """
 
         return self.loader.load(pdf_path)
 
     def split_documents(
         self,
-        documents: List[Document],
-    ) -> List[Document]:
+        documents: list[Document],
+    ) -> list[Document]:
+        """
+        Split documents into chunks.
+
+        Parameters
+        ----------
+        documents : list[Document]
+
+        Returns
+        -------
+        list[Document]
+        """
 
         return self.splitter.split(documents)
+
+    def search(
+        self,
+        query: str,
+        top_k: int = 5,
+    ) -> list[Document]:
+        """
+        Search relevant documents.
+
+        Parameters
+        ----------
+        query : str
+
+        top_k : int
+
+        Returns
+        -------
+        list[Document]
+        """
+
+        return self.knowledge_base.search(
+            query=query,
+            top_k=top_k,
+        )
+
+    def clear(self) -> None:
+        """
+        Clear the entire knowledge base.
+        """
+
+        self.knowledge_base.clear()
+
+        logger.warning("Knowledge base cleared.")
+
+    def size(self) -> int:
+        """
+        Number of chunks stored in the knowledge base.
+        """
+
+        return self.knowledge_base.size()
