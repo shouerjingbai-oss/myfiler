@@ -1,0 +1,17 @@
+pipeline = get_pipeline()
+
+pipeline.clear()
+
+pipeline.build(
+    "docs/test.pdf"
+)
+
+docs = pipeline.search(
+    "Transformer是什么？"
+)
+
+for doc in docs:
+
+    print(doc.metadata)
+
+    print(doc.page_content)
