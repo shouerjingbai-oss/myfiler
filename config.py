@@ -24,14 +24,15 @@ TEMP_DIR = DATA_DIR / "temp"
 # Create Directories
 # --------------------------------------------------
 
-for folder in [
-    DATA_DIR,
-    DOC_DIR,
-    CHROMA_DIR,
-    CACHE_DIR,
-    TEMP_DIR,
-]:
-    folder.mkdir(parents=True, exist_ok=True)
+def init_project():
+    for folder in [
+        DATA_DIR,
+        DOC_DIR,
+        CHROMA_DIR,
+        CACHE_DIR,
+        TEMP_DIR,
+    ]:
+        folder.mkdir(parents=True, exist_ok=True)
 
 # --------------------------------------------------
 # DeepSeek
