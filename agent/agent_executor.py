@@ -6,14 +6,10 @@ from langchain.agents import AgentExecutor
 from langchain.agents import create_tool_calling_agent
 
 from langchain_core.prompts import ChatPromptTemplate
+from llm.client import get_llm
 
-from langchain_openai import ChatOpenAI
 
-from config import (
-    DEEPSEEK_API_KEY,
-    DEEPSEEK_BASE_URL,
-    LLM_MODEL,
-)
+
 
 from agent.prompts import SYSTEM_PROMPT
 from agent.tools import search_knowledge
@@ -21,12 +17,8 @@ from agent.tools import search_knowledge
 
 def create_agent():
 
-    llm = ChatOpenAI(
-        api_key=DEEPSEEK_API_KEY,
-        base_url=DEEPSEEK_BASE_URL,
-        model=LLM_MODEL,
-        temperature=0.2,
-    )
+    llm = get_llm()
+    
 
     prompt = ChatPromptTemplate.from_messages(
         [
