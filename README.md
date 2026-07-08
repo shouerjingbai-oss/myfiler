@@ -134,7 +134,7 @@ pip install -r requirements.txt
 复制：
 
 ```
-.env.example
+.env
 ```
 
 修改：
@@ -199,6 +199,4 @@ DeepSeek 回答
 
 ---
 
-## License
 
-MIT License
